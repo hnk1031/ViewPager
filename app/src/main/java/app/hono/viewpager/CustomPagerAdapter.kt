@@ -22,11 +22,10 @@ class CustomPagerAdapter(val context: Context, val diaryList: List<Diary>) : Pag
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding = ItemViewPagerBinding.inflate(LayoutInflater.from(context), container, false)
         diaryList[position].let {
-            //Bitmapでimage表示
             binding.imageView.setImageBitmap(BitmapFactory.decodeFile(it.imageId))
             binding.menuTextView.text = it.menuContent
             binding.memoTextView.text = it.memoContent
-            binding.textView.text = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPANESE).format(it.date)
+            binding.textView.text = SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(it.date)
         }
 
         container.addView(binding.root)

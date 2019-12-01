@@ -61,7 +61,7 @@ class StartActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             realm.executeTransaction {
                 val diary = it.createObject(Diary::class.java, UUID.randomUUID().toString())
-                diary.imageId = filePath
+                diary.imageId = filePath.toString()
                 diary.menuContent = menuEditText.text.toString()
                 diary.memoContent = memoEditText.text.toString()
                 diary.date = Date()
