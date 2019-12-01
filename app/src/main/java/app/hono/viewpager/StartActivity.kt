@@ -5,16 +5,23 @@ import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.activity_start.*
+import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
+
 
 class StartActivity : AppCompatActivity() {
 
@@ -52,9 +59,7 @@ class StartActivity : AppCompatActivity() {
         galleryButton.setOnClickListener {
             val intent: Intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
-            startActivityForResult(intent,
-                REQUEST_CODE_PHOTO
-            )
+            startActivityForResult(intent, REQUEST_CODE_PHOTO)
         }
 
         //保存ボタンを押したとき
@@ -73,13 +78,29 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    verride fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
+            //付け足した
+            val strDocId: String = DocumentsContract.getDocumentId(data?.data)
+            val strSplittedDocId: Array<String> = strDocId.split(":").toTypedArray()
+            val strId: String? = strSplittedDocId[strSplittedDocId.length - 1]
+
+            val crsCursor: Cursor? = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                Array<String?> {MediaStore.MediaColumns.DATA},
+                "_id=?",
+                Array<String?> {strId},
+                null
+            )
+            crsCursor?.moveToFirst()
+            filePath = crsCursor?.getString(0)
+
             val contentResolver: ContentResolver = this.contentResolver
             val uri: Uri? = data?.data
             if (uri != null)  filePath = contentResolver.getType(uri)
+
             try {
                 var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 imageView.setImageBitmap(bitmap)
@@ -88,4 +109,5 @@ class StartActivity : AppCompatActivity() {
             }
         }
     }
+
 }
