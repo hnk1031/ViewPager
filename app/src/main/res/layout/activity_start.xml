@@ -37,14 +37,17 @@
 
     <Button
             android:id="@+id/galleryButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="画像を選択"
+            android:background="@drawable/button_design"
+            android:fontFamily="casual"
+            android:text=" image select "
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -52,6 +55,7 @@
             android:id="@+id/menuTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="casual"
             android:text="Menu"
             app:layout_constraintBottom_toTopOf="@+id/menuEditText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +78,7 @@
             android:id="@+id/memoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="casual"
             android:text="Memo"
             app:layout_constraintBottom_toTopOf="@+id/memoEditText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -94,10 +99,16 @@
 
     <Button
             android:id="@+id/saveButton"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="記録"
+            android:background="@drawable/button_design"
+            android:fontFamily="casual"
+            android:text="save"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.489"

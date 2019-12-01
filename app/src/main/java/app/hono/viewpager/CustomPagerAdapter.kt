@@ -1,7 +1,7 @@
 package app.hono.viewpager
 
 import android.content.Context
-import android.net.Uri
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +21,9 @@ class CustomPagerAdapter(val context: Context, val diaryList: List<Diary>) : Pag
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding = ItemViewPagerBinding.inflate(LayoutInflater.from(context), container, false)
-        diaryList.forEach {
-            binding.imageView.setImageURI(Uri.parse(it.imageId))
+        diaryList[position].let {
+            //Bitmapでimage表示
+            binding.imageView.setImageBitmap(BitmapFactory.decodeFile(it.imageId))
             binding.menuTextView.text = it.menuContent
             binding.memoTextView.text = it.memoContent
             binding.textView.text = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPANESE).format(it.date)

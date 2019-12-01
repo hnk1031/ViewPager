@@ -1,11 +1,15 @@
 package app.hono.viewpager
 
+import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.activity_start.*
@@ -14,7 +18,7 @@ import java.util.*
 
 class StartActivity : AppCompatActivity() {
 
-    private var uri: Uri? = null
+    private var filePath: String? = null
 
 
     private val realmConfig = RealmConfiguration.Builder()
@@ -33,6 +37,18 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
 
+        //ダイアログ表示
+        if (checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+                // 許可ダイアログで今後表示しないにチェックされていない場合
+            }
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1000)
+            }
+        }
+
+        //ギャラリー呼び出し
         galleryButton.setOnClickListener {
             val intent: Intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
@@ -41,14 +57,15 @@ class StartActivity : AppCompatActivity() {
             )
         }
 
+        //保存ボタンを押したとき
         saveButton.setOnClickListener {
             realm.executeTransaction {
                 val diary = it.createObject(Diary::class.java, UUID.randomUUID().toString())
-                diary.imageId = uri.toString()
+                diary.imageId = filePath
                 diary.menuContent = menuEditText.text.toString()
                 diary.memoContent = memoEditText.text.toString()
-                diary.date = Date(System.currentTimeMillis())
-                realm.copyToRealm(diary)
+                diary.date = Date()
+                //realm.copyToRealm(diary)
             }
 
             val intent:Intent = Intent(application, MainActivity::class.java)
@@ -60,14 +77,14 @@ class StartActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                uri = data.data
-                try {
-                    var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-                    imageView.setImageBitmap(bitmap)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+            val contentResolver: ContentResolver = this.contentResolver
+            val uri: Uri? = data?.data
+            if (uri != null)  filePath = contentResolver.getType(uri)
+            try {
+                var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                imageView.setImageBitmap(bitmap)
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
     }

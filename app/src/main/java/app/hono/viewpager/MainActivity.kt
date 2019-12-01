@@ -1,6 +1,5 @@
 package app.hono.viewpager
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -35,10 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         val diaryMutableList = diaryList.toMutableList()
 
-        diaryMutableList.forEach {
-            it.imageId
-        }
-
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewPager.adapter =
@@ -52,8 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    fun create(imageId: Uri, menuContext: String, memoContext: String) {
+    fun create(imageId: String, menuContext: String, memoContext: String) {
 
     }
 
