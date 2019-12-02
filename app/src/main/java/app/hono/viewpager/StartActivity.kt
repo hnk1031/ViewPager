@@ -2,23 +2,18 @@ package app.hono.viewpager
 
 import android.Manifest
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.activity_start.*
-import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
 
@@ -50,15 +45,25 @@ class StartActivity : AppCompatActivity() {
                 // 許可ダイアログで今後表示しないにチェックされていない場合
             }
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),1000)
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1000
+                )
             }
         }
 
         //ギャラリー呼び出し
         galleryButton.setOnClickListener {
-            val intent: Intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            val intent: Intent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(intent, REQUEST_CODE_PHOTO)
         }
 
@@ -73,7 +78,7 @@ class StartActivity : AppCompatActivity() {
                 //realm.copyToRealm(diary)
             }
 
-            val intent:Intent = Intent(application, MainActivity::class.java)
+            val intent: Intent = Intent(application, MainActivity::class.java)
             startActivity(intent)
         }
     }
@@ -82,25 +87,20 @@ class StartActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
-            //付け足した
             val strDocId: String = DocumentsContract.getDocumentId(data?.data)
             val strSplittedDocId: Array<String> = strDocId.split(":").toTypedArray()
             val strId: String? = strSplittedDocId[strSplittedDocId.size - 1]
-
             val crsCursor: Cursor? = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                Array<String?> {MediaStore.MediaColumns.DATA},
+                arrayOf(MediaStore.MediaColumns.DATA),
                 "_id=?",
-                Array<String?> {strId},
+                arrayOf(strId),
                 null
             )
             crsCursor?.moveToFirst()
             filePath = crsCursor?.getString(0)
 
-            val contentResolver: ContentResolver = this.contentResolver
             val uri: Uri? = data?.data
-            if (uri != null)  filePath = contentResolver.getType(uri)
-
             try {
                 var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                 imageView.setImageBitmap(bitmap)
@@ -109,5 +109,4 @@ class StartActivity : AppCompatActivity() {
             }
         }
     }
-
 }

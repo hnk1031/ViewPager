@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.viewpager.widget.PagerAdapter
 import app.hono.viewpager.databinding.ItemViewPagerBinding
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,7 +23,8 @@ class CustomPagerAdapter(val context: Context, val diaryList: List<Diary>) : Pag
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val binding = ItemViewPagerBinding.inflate(LayoutInflater.from(context), container, false)
         diaryList[position].let {
-            binding.imageView.setImageBitmap(BitmapFactory.decodeFile(it.imageId))
+            val file = File(it.imageId!!)
+            binding.imageView.setImageBitmap(BitmapFactory.decodeFile(file.absolutePath))
             binding.menuTextView.text = it.menuContent
             binding.memoTextView.text = it.memoContent
             binding.textView.text = SimpleDateFormat("yyyy/MM/dd", Locale.JAPANESE).format(it.date)
