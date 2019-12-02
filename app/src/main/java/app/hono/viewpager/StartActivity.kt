@@ -78,14 +78,14 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
-    verride fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_PHOTO && resultCode == Activity.RESULT_OK) {
             //付け足した
             val strDocId: String = DocumentsContract.getDocumentId(data?.data)
             val strSplittedDocId: Array<String> = strDocId.split(":").toTypedArray()
-            val strId: String? = strSplittedDocId[strSplittedDocId.length - 1]
+            val strId: String? = strSplittedDocId[strSplittedDocId.size - 1]
 
             val crsCursor: Cursor? = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
