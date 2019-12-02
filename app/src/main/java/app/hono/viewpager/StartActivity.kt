@@ -75,7 +75,6 @@ class StartActivity : AppCompatActivity() {
                 diary.menuContent = menuEditText.text.toString()
                 diary.memoContent = memoEditText.text.toString()
                 diary.date = Date()
-                //realm.copyToRealm(diary)
             }
 
             val intent: Intent = Intent(application, MainActivity::class.java)

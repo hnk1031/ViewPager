@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item>
 
         <shape android:shape="rectangle">
+
+            <padding
+                    android:left="12dp"
+                    android:right="12dp"
+                    />
+            <corners
+                    android:topRightRadius="50dp"
+                    android:bottomRightRadius="50dp"
+                    android:bottomLeftRadius="50dp"
+                    android:topLeftRadius="50dp"
+                    />
+            <solid
+                    android:color="#00ffffff"
+                    />
+        </shape>
+    </item>
+    <item>
+
+        <shape android:shape="rectangle">
+
 
             <corners
                     android:topRightRadius="50dp"
@@ -15,5 +36,6 @@
                     />
         </shape>
     </item>
+
 
 </layer-list>
